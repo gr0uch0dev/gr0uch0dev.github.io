@@ -15,7 +15,7 @@ Execute the jekyll server and bind it to the host
 After the changes are made in the docker container we can commit to a new image
 `docker commit <containerID> <nameOfNewImage>`
 
-Use the newly created one
+We can then use the new image just created
 `docker run -it  --volume="$PWD:/srv/jekyll" -p 4000:4000 <nameOfNewImage> /bin/bash`
 
 Or to start the server at running use the following command
