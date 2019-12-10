@@ -1,4 +1,4 @@
-Welcome to Groucho's blog!
+# Welcome to Groucho's blog!
 
 Run the docker image and execute the jekyll
 `docker run  --volume="$PWD:/srv/jekyll" -it jekyll/jekyll:3.8 /bin/bash`
