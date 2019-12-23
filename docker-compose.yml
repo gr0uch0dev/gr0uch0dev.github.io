@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  jekyll:
+    hostname: "groucho_blog"
+    build:
+      context: .
+    ports:
+      - 4000:4000
+    volumes:
+      - $PWD:/srv/jekyll
+    command: bundle exec jekyll serve --livereload --host 0.0.0.0
