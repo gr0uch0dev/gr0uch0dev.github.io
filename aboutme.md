@@ -20,7 +20,7 @@ On the applied side his main interests span among decentralized finance, distrib
 
 This blog is intended to share Groucho’s notes about the topics he is interested into hoping somebody could find them useful.
 
-Groucho needs your kind help to finance his studies.
+Groucho needs your kind help to finance his studies
 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](http://www.paypal.me/grouchodev/20)
 [![Donate with Ethereum](https://en.cryptobadges.io/badge/micro/0x1415b30aD8a8B5993a30d4cfBe91092C0783702C)](https://en.cryptobadges.io/donate/0x1415b30aD8a8B5993a30d4cfBe91092C0783702C)
