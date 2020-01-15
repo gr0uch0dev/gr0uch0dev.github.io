@@ -1,11 +1,11 @@
 ---
 layout: post
-title:  Create a Private Ethereum Blockchain
-date:   2020-01-15
+title: Create a Private Ethereum Blockchain
+date: 2020-01-15
 categories: Ethereum
 ---
 
-# Exploration of the procedures to build a two node private ethereum chain
+## Introduction
 
 We are assuming that both **geth** and **puppeth** have been successfully installed and added to the system path.
 
@@ -16,7 +16,7 @@ In this tutorial we are going to see:
 *   how to use Metamask to interact with our private node
 *   how to attach Remix to the desired node
 
-# A two-node Private Chain Setup
+## A two-node Private Chain Setup
 As our first step we create two empty folders that will contain the blockchain data
 
 ![tree](/img/treeEth.png)
@@ -67,7 +67,7 @@ The two addresses we got from the previous steps are the following:
 
 
 
-# Creation of configuration file using puppeth
+## Creation of configuration file using puppeth
 
 The previous steps gave us two addresses, one for each node.
 
@@ -110,7 +110,7 @@ For the purpose of our example we are going to modify the Json as following:
 
 We are not going deeper in the description of the fields. Please refer to the Ethereum documentation for more info.
 
-# Node initialization using configuration file
+## Node initialization using configuration file
 
 We are now going to create our two nodes. Both of them will share the same genesis file we just created.
 
@@ -142,26 +142,18 @@ We now start our first node creating and executing a bash file **startNode1.sh**
 
 
 As far as the options chosen here we suggest the reader to check the geth documentation for a detailed exposition. We just want to focus on the following ones:
+ - **--nodiscover**: force to add peers manually through their enode  identifiers;
+ - **--rpc, --rpcaddr, --rpcport**: allow for RPC connection and specify the main setups;
+ - **--rpcapi**: lists which API will be available for calls over the RPC protocol;
+ - **--rpccorsdomain**: specify from which cross domain RPC requests can be sent.
 
 
-    **--nodiscover**: force to add peers manually through their enode identifiers;
-
-
-    **--rpc, --rpcaddr, --rpcport**: allow for RPC connection and specify the main setups;
-
-
-    **--rpcapi**: lists which API will be available for calls over the RPC protocol;
-
-
-    **--rpccorsdomain**: specify from which cross domain RPC requests can be sent.
-
-
-    We are allowing for all since we will interact to our node from various sources.
+We are allowing for all since we will interact to our node from various sources.
 
 Creating a **startNode2.sh** in the same way we just did for node1 will result in a script to run also node2. We just need to change the ports (--rpcport,--port) that have been already assigned to node1.
 
 
-# Make the two nodes know each other  
+## Make the two nodes know each other  
 
 From the previous steps we get two nodes that have been initialized using the same genesis state and two bash scripts containing the geth command to run them both.
 
@@ -199,23 +191,28 @@ In our example we are going to create a node1/static-nodes.json with the followi
 
 
 ```
-[
+"[
+
   "enode://c91697f6f5cfd4f7c1f84abd577ba194e95de079c21d0cd78a708d17a4c8e72dbea271e2c2f97c87ee40626c6ec82d2360753086412d8fd83dad0ef68b545029@[::]:30312?discport=0",
+
+
   "enode://85b2d51e88b77a4ee2ab916b14f23b01a69ee4cf74836b0927a68ba547303e41752b679bd4f50f92c4b0828da97ec3a0fac94a587b5e82a0cb9d65ce96abb2cf@[::]:30311?discport=0"
 
-]
+]"
+# just copy the content inside "" into a json new file
+
 ```
 
 
 Where, in this case, in place of [::] we write the ip address assigned to our localhost.
 
-We recall that at the stage of creation of the configuration file the account that was allowed to seal was the one created in node1, therefore we should expect a failure when an account that is not authorized tries to seal a block.
+We recall that at the stage of creation of the configuration file the account that was allowedscr to seal was the one created in node1, therefore we should expect a failure when an account that is not authorized tries to seal a block.
 
 We can see this happening in the logs concerning node2, where there is no address with such a persmission:
 
 ![seal](/img/seal.png)
 
-# Run the nodes and attach to them (geth)
+## Run the nodes and attach to them (geth)
 
 We run both node1 and node2 using the bash scripts `startNode1.sh` and `startNode2.sh` just created previously.  When both the nodes are running we should expect node2 to import the blocks that were mined by the account operating in node1 and allowed to seal.
 
@@ -234,7 +231,7 @@ In our case, using the procedures provided at node startup we could check that b
 In the above we see that node1 (left) has in its peers the enode of node2(right).
 
 
-# Allow mining only when pending transactions
+## Allow mining only when pending transactions
 
 From the verbosity of the log been shown in the console while running the node, we can see that mining(or sealing in this case) is happening independently on whether there is or not a transaction to be mined.
 
@@ -284,7 +281,7 @@ geth attach node1/geth.ipc --preload "mineWhenNeeded.js"
 Now we should see that just when a transaction is made the account entitled to seal will start its activities.
 
 
-# Transactions between accounts
+## Transactions between accounts
 
 We create a new account in node2 that will receive ethers from the address we have already created and recharged at startup of node2 (intra-node transaction)
 
@@ -329,7 +326,7 @@ Up to this point we expect to see the following folders’ tree structure
 ![tree_final](/img/tree_final.png)
 
 
-# Connect the node with Metamask
+## Connect the node with Metamask
 
 We want now to connect our running node to Metamask.  This, working as a wallet, will generate its own addresses and store their keys inside the application.
 
@@ -364,7 +361,7 @@ And we can check that the transaction is successfully executed
 
 ![balance_geth_metamask](/img/balance_geth_metamask.png)
 
-# Attach the node using Remix
+## Attach the node using Remix
 
 We are now going to connect the Remix IDE to our node. Remix doesn’t work as Metamask does. It will  not create an ad-hoc wallet but it will allow us to manage the accounts created throug geth.
 
@@ -378,7 +375,7 @@ In the Remix **run tab** we choose **Web3 Provider** as the environment. At popu
 
 
 
-# Conclusions
+## Conclusions
 
 In this walkthrough we saw how to create a two-node ETH private chain.
 
