@@ -4,6 +4,9 @@ title: About me
 subtitle: A utopian anarchist  
 ---
 
+<div style="text-align:center"><img src="/img/me.jpg" /></div>
+
+
 Groucho showed up in the net at the time Telnet was ubiquitous and most of the tech conversations were happening over IRC (the best ones still are though). At that time in his small village the only place with a modest  connection was an internet point. He started to trade computer repairs for free access to the net.
 
 Although mainly interested in sysadmin and security he then came into two books that were going to switch his focus from tech to programming. These books were “Programming in C” by King and the holy “Structure and Interpretation of computer programs”. With the latter playing also a pivotal role in the development of his love for mathematics, Algebra in particular.

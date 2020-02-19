@@ -7,9 +7,7 @@ image: /img/romantico.jpeg
 ---
 
 
-Caro sentimentale del ventunesimo secolo,
-
-questa riflessione nasce come conseguenza del continuo sentirmi ripetere “tu sbagli” dopo essere stato accusato di un eccessivo romanticismo sia in amore che nella vita.
+Caro sentimentale del ventunesimo secolo, questa riflessione nasce come conseguenza del continuo sentirmi ripetere “tu sbagli” dopo essere stato accusato di un eccessivo romanticismo sia in amore che nella vita.
 
 
 Ora mi sento di guardare negli occhi il me di un po’ di anni fa e dirgli: &lt;&lt; abbiamo fallito, non siamo diventati “grandi”&gt;&gt;. Perché, sappi, caro lettore, che io e lui ci abbiamo provato in tutti i modi. Prima che arrivassi io, se ne stava chiuso in sé come un inguaribile romantico. Povero ragazzino obeso, lì a vivere nel suo mondo immaginario, afflitto anche dalla minima delle problematiche sociali. È riuscito, però, nella sua sofferenza a passarmi la palla e a darmi la fascia da capitano. Ho preso io il posto di comando. Non è stato facile, ho dovuto stringere i denti, ma, alla fine, gli ho permesso di esplorare nuovi orizzonti.
