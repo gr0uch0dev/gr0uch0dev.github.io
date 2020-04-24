@@ -20,11 +20,14 @@ description: A new blog for Groucho
 
 # List of links in the navigation bar
 navbar-links:
+  Assembly:
+    - MASM: "masm"
+    - NASM: "nasm"
+  About Me: "aboutme"
   Ita:
     - Riflessioni: "italian"
     - All Ita: "italian"
-  About Me: "aboutme"
-  Author's home: ""
+  Author's home: "index"
 
 
 # Image to show in the navigation bar - image must be a square (width = height)

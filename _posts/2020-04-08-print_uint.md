@@ -3,12 +3,14 @@ layout: post
 title: How could we use the stack in Assembly?
 subtitle:  An example for printing unsigned integers
 date: 2020-04-08
-categories: Assembly
+categories: NASM
 ---
 
 # How could we use the stack? An example for printing unsigned integers.
 
-The stack as we know is a data structure built on top of the actual memory and that grows downwards towards the zero memory address.
+We are dealing with Nasm here.
+
+The stack as we know is a data structure built on top of the actual memory that grows downwards towards the zero memory address.
 To explore how we could use the stack to store data we need, lets consider a program whose purpose is to print a given unsigned decimal integer.
 
 Have a look at the code section. The idea is to recursively divide the value by 10 and save the reminder anytime. Where do we save the reminder? **The stack is the answer!** Actually, to be more precise, we store the reminders in memory locations next to an address that is stored in the stack.
