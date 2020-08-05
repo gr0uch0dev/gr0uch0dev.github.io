@@ -23,6 +23,8 @@ navbar-links:
   Assembly:
     - MASM: "masm"
     - NASM: "nasm"
+  Hyperledger: "hyperledger"
+  Ethereum: "ethereum"
   About Me: "aboutme"
   Ita:
     - Riflessioni: "italian"
