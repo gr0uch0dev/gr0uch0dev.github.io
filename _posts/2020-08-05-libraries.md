@@ -34,9 +34,9 @@ To understand them better lets consider a potential use case.
 Suppose you ask a programmer to write a procedure for you to be used in your program.
 Such a programmer is willing to accept your request but only upon the payment of a little price. Furthermore she does not want to share the source code of the procedure. How can she do that?
 
-She will give you the compiled object of its own procedure and you will call it as a kind of "service". She will write her procedure in her desired programming language. Once done she will create from that a library `.lib` file  (made of binaries) that she will handed to you.
+She will give you the compiled object of its own procedure and you will call it as a kind of "service". She will write her procedure in her desired programming language. Once done she will create from that a library `.lib` file  (made of binaries) that she will hand to you.
 
-You then write your program calling her procedure but without providing any other information on the actual inner working of the function. We just say to the compiler: " I know I am calling something I did not defined but be aware that the linker will receive an object with instructions on how to execute this procedure". Therefore the compiler will create an object leaving a space that will be filled later by the linker.
+You then write your program calling her procedure but without providing any other information on the actual inner working of the function. We just say to the compiler: " I know I am calling something I did not define but be aware that the linker will receive an object with instructions on how to execute this procedure". Therefore the compiler will create an object leaving a space that will be filled later by the linker.
 
 #### Filling the void with libraries
 
@@ -105,3 +105,5 @@ In the linker stage we link the object file previously created with the `.lib` f
 ### Conclusion
 
 To conclude, we can say that with static libraries we insert the code at compile time while for dynamic libraries the necessary code is injected at runtime.
+
+For the creation of a static library and its usage check the post [here](../2020-08-06-include_and_libraries).
