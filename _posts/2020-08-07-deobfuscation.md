@@ -2,8 +2,8 @@
 layout: post
 title: Malware deobfuscation
 subtitle: Reverse Engineering of a deobfuscating procedure
-date: 2020-05-13
-categories: MASM
+date: 2020-08-07
+categories: malware
 ---
 ### Intro
 This post is dedicated to a deobfuscation procedure found in a malware named `srvcp.exe` and usually used by SANS for explanatory purposes. [Here](https://www.sans.org/security-resources/malwarefaq/srvcp) you can found the SANS report that covers the malware.
