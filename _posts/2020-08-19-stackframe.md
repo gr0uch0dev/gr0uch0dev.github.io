@@ -109,7 +109,7 @@ We are used to read `ret` followed by a number of bytes at the end of a procedur
 
 What happens to the stack when `ret 8` is executed by the CPU is shown in the next picture.
 <div class="text-center">
-<a href="https://ibb.co/tDrgyqS"><img src="https://i.ibb.co/PgHKBcR/final.png" alt="final" border="0"></a>
+<a href="https://ibb.co/dj3zpLK"><img src="https://i.ibb.co/5Gzfjnc/final-stack-1.png" alt="final-stack-1" border="0"></a>
 </div>
 
 
