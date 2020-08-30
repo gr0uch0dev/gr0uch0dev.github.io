@@ -161,6 +161,11 @@ paginate: 5
 kramdown:
   input: GFM
 
+collections:
+  category:
+    output: true
+
+
 # Default YAML values (more information on Jekyll's site)
 defaults:
   -
@@ -177,6 +182,14 @@ defaults:
     values:
       layout: "page"
       show-avatar: true
+  -
+    scope:
+      path: ""
+      type: category
+    values:
+      layout: "category"
+
+
 
 # Use tags index page and make tags on each post clickable
 link-tags: true

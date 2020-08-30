@@ -1,7 +1,6 @@
 ---
 layout: page
 title: About me
-subtitle: A utopian anarchist
 ---
 Groucho showed up in the net at a very young age, devouring knowledge over IRC channels. At that time in his small village the only place with a modest connection was an internet point. He started to trade IT maintenance for free access to the net and (lots of) coke drinks. He will never forget the rushing lunches and the school days skipped just to head to that keyboard.
 
