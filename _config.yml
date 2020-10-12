@@ -25,6 +25,7 @@ navbar-links:
     - NASM: "nasm"
   Security:
     - Malware Analysis: "malware_analysis"
+    - HTB: "hack_the_box"
   Hyperledger: "hyperledger"
   Ethereum: "ethereum"
   About Me: "aboutme"
