@@ -1,4 +1,8 @@
-# Docker to reduce attack surface
+---
+layout: post
+title: Docker to reduce attack surface
+date: 2023-01-03
+---
 
 ## Intro
 
