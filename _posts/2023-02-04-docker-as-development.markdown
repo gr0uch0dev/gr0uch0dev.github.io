@@ -2,7 +2,7 @@
 layout: post
 title: Reduce the attack surface on your development hosts separating where you write code from where you test it. Docker a good compromise
 date: 2023-02-04
-image: img/docker_meme.jpeg
+image: https://media.makeameme.org/created/containers-containers-everywhere-599454.jpg
 ---
 
 
