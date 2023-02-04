@@ -4,6 +4,8 @@ title: Reduce your attack surface at development stage separating where you writ
 date: 2023-02-04
 ---
 
+<meta property="og:image" content="https://icon-library.com/images/docker-container-icon/docker-container-icon-26.jpg">
+
 ## Intro
 
 In the recent years `Docker` and containerization have revolutionized the way we package and ship applications into running environments.
