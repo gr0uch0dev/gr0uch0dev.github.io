@@ -1,7 +1,7 @@
 ---
 layout: post
 title: Reduce your attack surface at development stage separating where you write code from where you test it. Docker a good compromise.
-date: 2023-01-03
+date: 2023-01-04
 ---
 
 ## Intro
