@@ -12,17 +12,17 @@ But there is actually one other benefit that `Docker` brings to the table, namel
 
 With the spike in supply-chain and typo-squatting attacks, containerization can play an important role into reducing the risks of malicious activities from third party components.
 
-Here we focus on the security benefits that `Docker` can already bring at development stages. Risks and security concerns that generally holds for `Docker` are out of scope. It is just important to stress that containers are not virtual machines. Undoubtedly there exists more secure (and real) isolation than containers, nevertheless, they can bring huge benefits in creating more secure environments.
+Here we focus on the security benefits that `Docker` can already bring at development stages. Risks and security concerns that generally hold for `Docker` are out of scope. It is just important to stress that containers are not virtual machines. Undoubtedly there exists more secure (and real) isolation than containers, nevertheless, they can bring huge benefits in creating more secure environments.
 
 We use the term `host` to refer to the machine where the `Docker` engine is being run.
 
 The article shows, step by step, how to create development environments using `Docker` containers and the benefits they bring into separating the context where we write code from the one where we actually run it.
 
-We use the term `development environment` to refer to the context where we want to install all the dependencies that are required to test our application. The word `development` resemble the idea that we want to create contexts that change during developing activities. Sometimes we refer to this environment as `the running context` since its main objective is to actually run the application we are developing.
+We use the term `development environment` to refer to the context where we want to install all the dependencies that are required to test our application. The word `development` resembles the idea that we want to create contexts that change during developing activities. Sometimes we refer to this environment as `the running context` since its main objective is to actually run the application we are developing.
 
 The main idea is to write code using editor or IDEs that are installed on our `host` but the code is tested on different environments that are isolated from the `host`.
  
-In conclusion, we present how a feature of Visual Studio can be used to ease the development process inside containers.
+In conclusion, we present how a feature of Visual Studio Code can be used to ease the development process inside containers.
 
 Even if not necessary, familiarity with basic `Docker` concepts is assumed here.
 
@@ -191,7 +191,7 @@ with the following content
 ```bash
 #!/bin/bash
 
-# clean previous artifacts if present in the host
+# clean previous artifacts if present in folder shared with the host
 rm -rf /app/node_module
 rm -f /app/{package,package-lock}.json
 ###
@@ -293,9 +293,9 @@ $ docker run --rm -it -v $PWD/app:/app myapp_dev_environment main.js
 
 The application works. `cli` was successfully included in `main.js`.
 
-## Make user
+## Map users of container and host
 
-One issue with the approach we followed above is that the command execution in the container is running with `root`.
+One issue with the approach we followed above is that the command execution in the container is running with `root`. We see the following in our `host` (where we are actually `user`)
 
 ```ls
 $ ls -l
@@ -307,15 +307,15 @@ drwxr-xr-x 16 root root 4096 Feb  1 20:10 node_modules
 
 ```
 
-Up to now we did not want to add many lines to the `Dockerfile` to focus on the main concepts. Now is the time to make it more dirty.
+Up to now we did not want to add many lines to the `Dockerfile` to allow us to focus on the main concepts. Now is the time to make it more dirty.
 
 Recall that we want to use our `Docker` environment to develop our application and not just to run it. Any file created by the container inside `/app` must be owned by the user we are using in our `host`.
 
-We want that the user that performs operations related to our application inside the container (installing modules, creating new files, and more) has our same `user` and `group` id. With this if the user in the container creates any file into the volume bound with `$PWD/app` of the `host` then we will see that file as owned by us into the filesystem of the `host`.
+We want that the user that performs operations related to our application inside the container (installing modules, creating new files, and more) has our same `user` and `group` id that we have in `host`. With this if the user in the container creates any file into the volume bound with `$PWD/app` of the `host` then we will see that file as owned by us (`user`) into the filesystem of the `host`.
 
-Let's say that we want to have a cousin user (with name `a-more-secure-developer`) that exists in the context of the container but shares with us the same user and group id that we have in our `host`. Whatever `a-more-secure-developer` does in `/app` of the container does it looks like as if we were doing it into `$PWD/app` of the `host`.
+What we want, is to have a cousin user (with name `a-more-secure-developer`) that exists in the context of the container but shares with us the same user and group id that we have in our `host`. Whatever `a-more-secure-developer` does in `/app` of the container it looks like as if we were doing it into `$PWD/app` of the `host`.
 
-Furthermore we want to give `a-more-secure-developer` `sudo` capabilities inside the container. This is our development environment, we do not want to be restricted, we want to test all the dirty stuff that may come from out there.
+Furthermore we want to give `a-more-secure-developer` `sudo` capabilities inside the container. This is our development environment, we would like to relax restrictions, we want to play with stuff (with caution) that may come from out there. For explanatory sake we are allowing the user to have `sudo` capabilities without a password required.
 
 With this in mind, we change the `Dockerfile` content with the following
 
@@ -412,8 +412,6 @@ drwxr-xr-x 16 user user 4096 Feb  1 21:31 node_modules
 
 ```
 
-
-
 ## Play with the container at runtime
 
 Now we have an image that created a development environment.
@@ -440,7 +438,7 @@ Moreover, we can change the content of the files inside our `host` under `$PWD/a
 We add the following line to `$PWD/app/main.js` into our `host`
 
 ```
-var mocha = require("node-emoji");
+var node-emoji = require("node-emoji");
 ```
 
 We check the content of `main.js` in the filesystem of our `host`
@@ -449,7 +447,7 @@ We check the content of `main.js` in the filesystem of our `host`
 $ head -n 3 app/main.js 
 var figlet = require('figlet');
 var cli = require('cli');
-var mocha = require("node-emoji");
+var node-emoji = require("node-emoji");
 ```
 
 We then do the same check inside the container
@@ -458,7 +456,7 @@ We then do the same check inside the container
 a-more-secure-developer@1e8b60d512e7:/$ head -n 3 app/main.js 
 var figlet = require('figlet');
 var cli = require('cli');
-var mocha = require("node-emoji");
+var node-emoji = require("node-emoji");
 ```
 
 we see that changes happening in the `host` are reflected inside the container.
@@ -496,18 +494,10 @@ a-more-secure-developer@1e8b60d512e7:/app$ node main.js
                                                    
 ```
 
-
 If `node-emoji` is expected to be part of our actual development environment then `npm install node-emoji` must be added to the `Dockerfile`. If we are just testing `node-emoji` and we do not want to use it anymore then there is no need to have it in our environment.
 
-Indeed if there is no instruction to install the `node-emoji` package inside the `Dockerfile` then when we run again our `main.js`, using a container based on the `myapp_dev_environment` image, we get the following
+Indeed if there is no instruction to install the `node-emoji` package inside the `Dockerfile` then when we run again our `main.js`, using another container based on the same `myapp_dev_environment` image, we get the following
 
-```
-docker run --rm -it -v $PWD/app:/app myapp_dev_environment main.js
-```
-
-When we will run
-
-Otherwise when we run again the following
 
 ```
 $ docker run --rm -it -v $PWD/app:/app myapp_dev_environment main.js
@@ -530,19 +520,7 @@ rm -f /app/{package,package-lock}.json
 
 They are intended to clean from `/app` any `node` artifacts that may have been created by a container at runtime.
 
-This is 
-```
-a-more-secure-developer@c131161a7507:/app$ npm install mocha
-
-added 68 packages, and audited 83 packages in 4s
-
-21 packages are looking for funding
-  run `npm fund` for details
-
-found 0 vulnerabilities
-
-```
-what we want. The node environment specified in the `Dockerfile` has to be in a one to one relationship with the development environment we actually want.
+We clean them, because we want that the environment specified in the `Dockerfile` has to be in a one to one relationship with the development environment we actually want.
 
 If we comment out these two lines of `entrypoint.sh` then any package installed by a container at runtime (under `/app`) persists even after a new `docker run` is executed. This is due to the fact that the `/app` folder of the container is mapped with `$PWD/app` of the `host`. If we run `npm install` inside an interactive container then changes to `node_modules`, `package.json` and `package-lock.json` are persisted.
 
@@ -551,26 +529,23 @@ If you actually want this to be the case then you can comment out these two line
 
 ## Integration via VS CODE
 
-We consider the case of `VS CODE`
+We usually write code inside an IDE that is installed in the `host`. This means that when we click `run program` in the IDE, this searches (by default) for compilers or interpreters that are installed on the `host`. To change the execution context we have to tell the IDE to use the compiler/interpreter that is to be found inside a container and not the one available from the `host`.
 
-Following the approach presented above we have to run a container anytime we want to test the effects of a change that we make to the application. To have the interpreter we have to spawn a container.
+But think about the `node` application we are considering in this article. We do not want to run it only, we would also like to debug it to speed up our development activities.
 
-We usually write code inside an IDE that is installed in the `host`. This means that when we click `run program` in the IDE, this searches (by default) for compilers or interpreters that are installed on the `host`. 
+But if the `node` interpreter is expected to be found in a containerized environment then any interactive debug in the IDE may be impaired. Furthermore, the IDE may not be able to provide suggestions and information about the objects we are using in the code (like when we install specific plugins for the language). We write code in the `host` filesystem but the execution context is inside the container!
 
-For our example we consider `VS CODE`, but same concepts can be applied to other IDEs as well. At the end we just have to tell the IDE to use the compiler/interpreter that is to be found inside a container and not the one available from the `host`.
+If the container is spawn by the IDE only when we click on either `run` or `debug` actions how can the IDE follow the code we write? It will complain a lot while we write the code. It is understandable, it cannot resolve dependencies. This information is in the container, but they will be available to the IDE only when we click `run program`. To solve this we should make the IDE think that its context is the one of the container not the one of the `host`.
 
-Think about the `node` application we are considering in this article. We do not want to run it only, we would also like to debug it to speed up our development activities.
+We present the case of how we can achieve this in `VS CODE` using the `Dev Containers` extension.
 
-But if the `node` interpreter is expected to be found in a containerized environment then any interactive debug in the IDE is impaired. Furthermore the IDE cannot provide suggestions and information about the objects we are using in the code (installing `javascript` plugins for instance). We write code inside the `host` filesystem but the execution context is inside the container!
+We have `VS CODE` installed in the `host` but when we attach it to a running container it is like a new instance of `VS CODE` is launched but with the context of the container instead of the `host`.
 
-
-We want to write code in `VS CODE` but have the interpreter in the container.
-
-Install the `Dev Containers` extension
+We install the extension
 
 ![dev_containers](../img/dev_containers.png)
 
-Run a container out of `myapp_dev_environment` 
+We then run a container out of `myapp_dev_environment` image. We want this container to keep running in the background. The IDE has to attach to it.
 
 ```
 docker run --rm -d -t -v $PWD/app:/app --name container_development myapp_dev_environment
@@ -584,10 +559,6 @@ docker run --rm -d -t -v $PWD/app:/app --name container_development myapp_dev_en
 
 The combination of `-d` and `-t` allows the container to keep running in the background.
 
-
-![dev_container_in_vs_code](../img/dev_container_in_vs_code.png)
-
-
 ```
 $ docker ps
 CONTAINER ID   IMAGE                   COMMAND            CREATED         STATUS         PORTS     NAMES
@@ -595,18 +566,24 @@ CONTAINER ID   IMAGE                   COMMAND            CREATED         STATUS
 
 ```
 
+![dev_container_in_vs_code](../img/dev_container_in_vs_code.png)
 
-Right click on the container shown in `VS CODE` and then `Attach to Container`.
 
-A new instance of `VS CODE` is spawn
+We right-click on the container shown in `VS CODE` and then `Attach to Container`.
+
+A new instance of `VS CODE` is spawn and the context is the one of the container as can be seen from the bottom left of the following image
 
 
 ![inside_running_container](../img/inside_running_container.png)
 
-We run the application directly in `VS CODE`
+As shown in the above image the terminal provided by this new instance of `VS STUDIO` is the one of the container.
+
+We can run the application directly in `VS CODE`
 
 ![run_app_inside_container_from_vm](../img/run_app_inside_container_from_vm.png)
 
-And debug
+We can also debug
 
 ![debug_in_vscode](../img/debug_in_vscode.png)
+
+Happy coding!
