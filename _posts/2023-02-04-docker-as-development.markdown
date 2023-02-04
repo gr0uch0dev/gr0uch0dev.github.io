@@ -1,10 +1,10 @@
 ---
 layout: post
-title: Reduce your attack surface at development stage separating where you write code from where you test it. Docker a good compromise.
+title: Reduce the attack surface on your development hosts separating where you write code from where you test it. Docker a good compromise
 date: 2023-02-04
+image: img/docker_meme.jpeg
 ---
 
-<meta property="og:image" content="https://icon-library.com/images/docker-container-icon/docker-container-icon-26.jpg">
 
 ## Intro
 
