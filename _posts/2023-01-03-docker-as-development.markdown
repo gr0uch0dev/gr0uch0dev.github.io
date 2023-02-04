@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Docker to reduce attack surface
+title: Reduce your attack surface at development stage separating where you write code from where you test it. Docker a good compromise.
 date: 2023-01-03
 ---
 
@@ -8,23 +8,29 @@ date: 2023-01-03
 
 In the recent years `Docker` and containerization have revolutionized the way we package and ship applications into running environments.
 
-But there is actually one other benefit that `Docker` brings to the table, namely its capability to reduce the attack surface on local development environments.
+But there is actually one other benefit that `Docker` brings to the table, namely its capability to reduce the attack surface on our main hosts.
 
 With the spike in supply-chain and typo-squatting attacks, containerization can play an important role into reducing the risks of malicious activities from third party components.
 
-Here we focus on the security benefits that `Docker` can bring during the development stage of the software development lifecycle. Risks and security concerns that generally holds for `Docker` are out of scope. It is just important to stress that containers are not virtual machines. Nevertheless, they can bring huge benefits in creating more secure development environments.
+Here we focus on the security benefits that `Docker` can already bring at development stages. Risks and security concerns that generally holds for `Docker` are out of scope. It is just important to stress that containers are not virtual machines. Undoubtedly there exists more secure (and real) isolation than containers, nevertheless, they can bring huge benefits in creating more secure environments.
 
 We use the term `host` to refer to the machine where the `Docker` engine is being run.
 
 The article shows, step by step, how to create development environments using `Docker` containers and the benefits they bring into separating the context where we write code from the one where we actually run it.
- 
-Following the main concept of containerization as development environment we show how a feature of Visual Studio Code can be used to ease the development process inside the container.
 
-Even if not necessary, familiarity with basic Docker concepts is assumed here.
+We use the term `development environment` to refer to the context where we want to install all the dependencies that are required to test our application. The word `development` resemble the idea that we want to create contexts that change during developing activities. Sometimes we refer to this environment as `the running context` since its main objective is to actually run the application we are developing.
+
+The main idea is to write code using editor or IDEs that are installed on our `host` but the code is tested on different environments that are isolated from the `host`.
+ 
+In conclusion, we present how a feature of Visual Studio can be used to ease the development process inside containers.
+
+Even if not necessary, familiarity with basic `Docker` concepts is assumed here.
 
 ## Environment setup and first run
 
-The objective is to write a simple script in `javascript` whose aim at the moment is to just create some beautiful visual `ascii art`.
+To follow a naming convention, assuming that we are developing `my_app`, we will create a `Docker` image named `myapp_dev_environment` to spawn containers that are able to run the application `my_app`. 
+
+The objective of `my_app` for now is just a simple `javascript` to create some beautiful visual `ascii art`.
 
 ```js
 var figlet = require('figlet');
@@ -39,7 +45,7 @@ figlet('Hello Dear!!', function(err, data) {
 });
 ```
 
-We save the above code in `app/main.js` into an arbitrary directory of our `host`. The current structure look like this
+We save the above code in `app/main.js` into an arbitrary directory of our `host`. The current structure looks like this
 
 ```
 $ tree app/
@@ -54,16 +60,15 @@ $ node app/main.js
 bash: node: command not found
 ```
 
-`node` is not installed on our `host`.
+`node` is not installed.
 
-
-We could just rush and install it
+We could just rush and install it via an available package manager
 
 ```
 sudo apt-get install nodejs -y
 ```
 
-but what if we mistype `nodejs` and just write `nodejss`? What if that `nodejss` installed by mistake turns out to be a malicious package that starts doing dirty stuff on our `host` upon installation?
+but what if we mistype `nodejs` and instead write `nodejss`? What if that `nodejss` installed by mistake turns out to be a malicious package that starts doing dirty stuff on our `host` upon installation?
 
 What if `nodejs` (the actual legit package) has critical vulnerabilities in itself or in one of its dependencies?
 
@@ -75,7 +80,7 @@ What if we type `figllet` instead of `figlet` while running `npm install` and th
 
 Reasoning can go on indefinitely.
 
-We just wanted run some `node` but we ended up increasing our attack surface!
+We just wanted to run some `node` but we ended up increasing our attack surface!
 
 Ok, installing `node` on our `host` seems to be dangerous, but we still need to develop our application.
 
@@ -85,7 +90,7 @@ We start creating a `Dockerfile` into our directory
 FROM node
 ```
 
-for now we just need a `node` environment.
+for now we apparently need just a `node` environment.
 
 Current folder structure is
 
@@ -93,12 +98,12 @@ Current folder structure is
 $ tree .
 .
 ├── app
-│   └── main.js
+│   └── main.js
 └── Dockerfile
 
 ```
 
-The aim of this `Docker` image is creating an environment in which we can develop our application.
+The aim of this `Docker` image is creating an environment in which we can run our application that we are creating on our `host` (using an editor or IDE of our choice).
 
 We build a Docker image named `myapp_dev_environment`
 
@@ -106,7 +111,7 @@ We build a Docker image named `myapp_dev_environment`
 docker build -t myapp_dev_environment .
 ```
 
-The application is still in development stage. At this time we want to use Docker just to have an execution environment to be used for development purposes. This is why in the `Dockerfile` we are not copying the content of the application. 
+The application is still in development stage. At this time we want to use `Docker` just to have an execution environment to be used for development purposes. This is why in the `Dockerfile` we are not copying the content of the application. 
 
 If you have familiarity with `Docker` you have probably seen instructions like `COPY app/ /app` that where copying contents from the filesystem of the `host` to the one of the container. We usually use this when we have an app that is ready to be run and we embed it directly into the `Docker` image. This is done **to ship** the application, i.e. to provide an application together with its execution environment.
 
@@ -139,7 +144,6 @@ Error: Cannot find module 'figlet'
 
 The environment that the container spawn from the Docker image `myapp_dev_environment` it has `node` but it is missing the `figlet` package we need in order to create `ascii art`.
 
-
 An idea would be to write the following `Dockerfile`
 
 ```Dockerfile
@@ -165,11 +169,11 @@ node:internal/modules/cjs/loader:1042
 Error: Cannot find module 'figlet'
 ```
 
-The error is caused by the mounting of `$PWD/app` of the `host` with `/app` of the container. The content of the latter gets overwritten by the one of the former upon binding. In our `Dockerfile` we run `npm install figlet` with `/app` as the working directory. This means that `npm` produces its execution artifacts (`node_module`) under `/app`. But when we do the binding `$PWD/app:/app` the content of the container gets overwritten with the one of the `host` in `$PWD/app`. This is why the module `figlet` is still not found, because `node_module` is no longer there.
+The error is caused by the mounting of `$PWD/app` of the `host` with `/app` of the container. The content of the latter gets replaced by the one of the former upon binding. In our `Dockerfile` we run `npm install figlet` with `/app` as the working directory. This means that `npm` produces its execution artifacts, like `node_modules`, under container `/app`. But when we do the binding `$PWD/app:/app` the content of the container gets overwritten with the one of the `host` in `$PWD/app`. This is why the module `figlet` is still not found, because `node_modules` is no longer there.
 
 We can come with a workaround.
 
-We make the `Dockerfile` create all the `npm` artifacts (node modules and packages info) into a temporary directory `/dev-dependencies` and then use an `entrypoint` script that is executed as soon as the container spawns. Such `entrypoint` script will move the contents from `/dev-dependencies` to `/app` inside the container. This works because `entrypoint` is executed just after the volume binding.
+We make the `Dockerfile` create all the `npm` artifacts (node modules and packages info) into a temporary directory `/dev-dependencies` and then use an `entrypoint` script that is executed as soon as the container spawns. Such `entrypoint` will move the contents from `/dev-dependencies` to `/app` inside the container. This works because `entrypoint` is executed just after the volume binding.
 
 We create a new file named `entrypoint.sh`
 
@@ -177,7 +181,7 @@ We create a new file named `entrypoint.sh`
 $ tree .
 .
 ├── app
-│   └── main.js
+│   └── main.js
 ├── Dockerfile
 └── entrypoint.sh
 ```
@@ -198,7 +202,6 @@ node $@
 
 The last line `node $@` allows us to specify directly the `js` file to execute when using `docker run` instructions as it will be shown below.
  
-
 We replace the content in `Dockerfile` with the following
 
 ```Dockerfile
@@ -220,7 +223,7 @@ We build
 docker build -t myapp_dev_environment .
 ```
 
-We run the container knowing that the last instruction of the `entrypoint` is `node $@` so that we can just provide `main.js` as argument.
+We run the container knowing that the last instruction of the `entrypoint` is `node $@` so that we can just provide `main.js` as argument (`WORKDIR` is `/app`).
 
 ```bash
 $ docker run --rm -it -v $PWD/app:/app myapp_dev_environment main.js
@@ -242,7 +245,7 @@ We add the following line to `main.js`
 var cli = require('cli');
 ```
 
-We run again the application via the container used before
+We run again the application using the same instruction as before
 
 ```bash
 $ docker run --rm -it -v $PWD/app:/app myapp_dev_environment main.js
@@ -254,7 +257,7 @@ Error: Cannot find module 'cli'
 
 ```
 
-The module we want to use is not found in the development environment we created before.
+The module we want to use is not found in the development environment that we specified in the `Dockerfile`.
 
 We then modify the `Dockerfile` to add the new package as well
 
@@ -565,7 +568,7 @@ We want to write code in `VS CODE` but have the interpreter in the container.
 
 Install the `Dev Containers` extension
 
-![dev_containers](img/dev_containers.png)
+![dev_containers](../img/dev_containers.png)
 
 Run a container out of `myapp_dev_environment` 
 
@@ -582,7 +585,7 @@ docker run --rm -d -t -v $PWD/app:/app --name container_development myapp_dev_en
 The combination of `-d` and `-t` allows the container to keep running in the background.
 
 
-![dev_container_in_vs_code](img/dev_container_in_vs_code.png)
+![dev_container_in_vs_code](../img/dev_container_in_vs_code.png)
 
 
 ```
@@ -598,12 +601,12 @@ Right click on the container shown in `VS CODE` and then `Attach to Container`.
 A new instance of `VS CODE` is spawn
 
 
-![inside_running_container](img/inside_running_container.png)
+![inside_running_container](../img/inside_running_container.png)
 
 We run the application directly in `VS CODE`
 
-![run_app_inside_container_from_vm](img/run_app_inside_container_from_vm.png)
+![run_app_inside_container_from_vm](../img/run_app_inside_container_from_vm.png)
 
 And debug
 
-![debug_in_vscode](img/debug_in_vscode.png)
+![debug_in_vscode](../img/debug_in_vscode.png)
