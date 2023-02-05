@@ -31,8 +31,8 @@ use-site-title: true
           <img src="{{ post.image | relative_url }}">
         </a>
       </div>
-      -->
-      {% endif %}
+      
+      {% endif %}-->
       <div class="post-entry">
         {{ post.excerpt | strip_html | xml_escape | truncatewords: site.excerpt_length }}
         {% assign excerpt_word_count = post.excerpt | number_of_words %}
