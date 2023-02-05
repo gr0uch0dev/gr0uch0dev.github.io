@@ -20,14 +20,14 @@ description: A blog about various topics
 
 # List of links in the navigation bar
 navbar-links:
-  Assembly:
-    - MASM: "masm"
-    - NASM: "nasm"
-  Security:
-    - Malware Analysis: "malware_analysis"
-    - HTB: "hack_the_box"
-  Hyperledger: "hyperledger"
-  Ethereum: "ethereum"
+  # Assembly:
+  #   - MASM: "masm"
+  #   - NASM: "nasm"
+  # Security:
+  #   - Malware Analysis: "malware_analysis"
+  #   - HTB: "hack_the_box"
+  # Hyperledger: "hyperledger"
+  # Ethereum: "ethereum"
   About Me: "aboutme"
 #  Ita:
 #    - Riflessioni: "italian"
