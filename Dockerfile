@@ -1,4 +1,4 @@
-FROM jekyll/jekyll
+FROM jekyll/jekyll:3.3.7
 
 
 COPY --chown=jekyll:jekyll Gemfile .
